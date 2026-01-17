@@ -62,8 +62,6 @@ In the current digital landscape, users are forced to trade privacy for convenie
 * **AES-GCM Encryption:** Military-grade encryption performed entirely in the browser using the Web Crypto API.
 * **Zero-Knowledge:** The server never receives the encryption key or the unencrypted file.
 
-![Encryption Demo](path/to/encryption-screenshot.png)
-
 ### 📂 **Decentralized Storage**
 * **Arweave Integration:** Data is stored on the Permaweb, ensuring it cannot be deleted or censored.
 * **Bundlr Network:** Accelerated upload speeds and instant transaction finality.
@@ -71,8 +69,6 @@ In the current digital landscape, users are forced to trade privacy for convenie
 ### 💳 **Flexible Payments**
 * **Crypto & Fiat:** Support for **Stripe** (Credit Card) and **MetaMask** (ETH/USDC) payments.
 * **Pay-Per-Upload:** No monthly subscriptions.
-
-![Payment Screen](path/to/payment-screenshot.png)
 
 ### 🔑 **The Vault Key**
 * **Unique Identity:** Users receive a generated "Vault Key" (JSON) upon upload.
