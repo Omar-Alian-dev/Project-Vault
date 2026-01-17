@@ -1,3 +1,11 @@
+<div align="center">
+  <a href="https://github.com/Omar-Alian-dev/Project-Vault">
+    <img src="./Vault.png" alt="Vault Logo" width="300" height="auto" />
+  </a>
+  <br />
+  <br />
+</div>
+
 # 🔒 Vault - Decentralized Encrypted Storage
 
 ### **Your Data. Your Key. Forever.**
