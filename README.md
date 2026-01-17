@@ -151,16 +151,16 @@ Vault utilizes a **Client-Heavy Architecture** to ensure privacy.
 ## 📱 Demo
 
 ### 🎥 Live Demo
-*(Coming Soon: Video demonstration showcasing the encryption process)*
+*(Coming Soon: Video demonstration showcasing the key features)*
 
 ### 📸 Key Features Preview
 
 | Feature | Screenshot | Description |
 | :--- | :--- | :--- |
-| **Upload** | [View Screen] | Drag & Drop interface with file validation |
-| **Encryption** | [View Screen] | Real-time progress bar for client-side encryption |
-| **Vault Key** | [View Screen] | Success screen showing the generated key |
-| **Retrieval** | [View Screen] | Input field to paste key and decrypt files |
+| **Upload** | [Upoad Screen] | Drag & Drop interface with file validation |
+| **Encryption** | [Encryption Screen] | Real-time progress bar for client-side encryption |
+| **Vault Key** | [Vault Screen] | Success screen showing the generated key |
+| **Retrieval** | [Retrieval Screen] | Input field to paste key and decrypt files |
 
 ---
 
@@ -185,8 +185,22 @@ Vault utilizes a **Client-Heavy Architecture** to ensure privacy.
 💻 **Specialization:** Web3, React, Node.js, Cryptography.
 
 ### 📫 Connect With Us
-[![GitHub](https://img.shields.io/badge/GitHub-Omar--Alian--dev-181717?style=flat&logo=github)](https://github.com/Omar-Alian-dev)
-[![GitHub](https://img.shields.io/badge/GitHub-Anas--Kadamany-181717?style=flat&logo=github)](https://github.com/)
+
+<a href="https://github.com/Omar-Alian-dev">
+  <img src="https://img.shields.io/badge/GITHUB-OMAR--ALIAN--DEV-181717?style=for-the-badge&logo=github" alt="Omar Alian" />
+</a>
+<a href="https://www.linkedin.com/in/omar-alian/">
+  <img src="https://img.shields.io/badge/LINKEDIN-OMAR%20ALIAN-0077B5?style=for-the-badge&logo=linkedin" alt="Omar Alian" />
+</a>
+
+<br />
+
+<a href="https://github.com/AnasKadamany">
+  <img src="https://img.shields.io/badge/GITHUB-ANAS%20KADAMANY-181717?style=for-the-badge&logo=github" alt="Anas Kadamany" />
+</a>
+<a href="https://www.linkedin.com/in/anas-kadamany/">
+  <img src="https://img.shields.io/badge/LINKEDIN-ANAS%20KADAMANY-0077B5?style=for-the-badge&logo=linkedin" alt="Anas Kadamany" />
+</a>
 
 ---
 
