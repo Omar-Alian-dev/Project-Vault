@@ -99,7 +99,7 @@ Vault utilizes a **Client-Heavy Architecture** to ensure privacy.
 2.  **Server:** Verifies Payment -> Signs Upload Transaction.
 3.  **Browser:** Uploads Encrypted Data directly to Arweave (bypassing the server for data transfer).
 
-![System Architecture](path/to/architecture-diagram.png)
+![System Architecture](/system architecture.png)
 
 ---
 
