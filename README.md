@@ -205,7 +205,26 @@ Vault utilizes a **Client-Heavy Architecture** to ensure privacy.
 ---
 
 ## 🤝 Contributing
-This is a private academic project. Contributions are not currently accepted from external developers.
+
+This is a private academic project. Contributions are not accepted from external developers at this time.
+
+### 📧 Contact
+
+For inquiries regarding this project, please contact:
+
+* **Developer:** Omar Alian
+    * Email: [3mr3lian1234@gmail.com](3mr3lian1234@gmail.com)
+* **Developer:** Anas Kadamany
+    * Email: [anaskadamany@hotmail.com](anaskadamany@hotmail.com)
+
+### 🐛 Bug Reports
+
+If you have found a bug, please contact the developers directly with:
+
+* Clear description of the problem
+* Steps to reproduce
+* Expected vs actual behavior
+* Screenshots (if applicable)
 
 ---
 
