@@ -74,6 +74,10 @@ In the current digital landscape, users are forced to trade privacy for convenie
 * **Unique Identity:** Users receive a generated "Vault Key" (JSON) upon upload.
 * **Recovery:** This key is the *only* way to retrieve and decrypt files.
 
+## ⚠️ Alpha Prototype
+- Some features are simulated locally for architectural validation.
+- Backend, Arweave, and payment integrations are planned for Beta.
+
 ---
 
 ## 🛠️ Technical Stack
