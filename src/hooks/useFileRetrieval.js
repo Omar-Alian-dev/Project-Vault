@@ -9,7 +9,10 @@ export const useFileRetrieval = (showNotification) => {
 
   const handleRetrieve = async (inputKey) => {
     if (!inputKey.startsWith("vault://")) {
-      showNotification("error", "Invalid vault key format. Must start with vault://");
+      showNotification(
+        "error",
+        "Invalid vault key format. Must start with vault://",
+      );
       return;
     }
 
@@ -17,38 +20,45 @@ export const useFileRetrieval = (showNotification) => {
     setRetrievedFiles([]);
 
     try {
-      const [vaultIndexTxId, masterKeyHex] = inputKey.replace("vault://", "").split("#");
+      const [vaultIndexTxId, masterKeyHex] = inputKey
+        .replace("vault://", "")
+        .split("#");
 
       if (!vaultIndexTxId || !masterKeyHex) {
-        showNotification("error", "Malformed vault key — missing index or encryption key.");
+        showNotification(
+          "error",
+          "Malformed vault key — missing index or encryption key.",
+        );
         setRetrieving(false);
         return;
       }
 
       setRetrieveStep("fetch");
       setRetrieveProgress(20);
-      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      const vaultIndex = getVaultIndex(vaultIndexTxId);
+      // Fetch vault index from Arweave (or localStorage fallback)
+      const vaultIndex = await getVaultIndex(vaultIndexTxId);
       if (!vaultIndex) {
-        showNotification("error", "Vault not found. The key may be from a different session.");
+        showNotification(
+          "error",
+          "Vault not found. The key may be invalid or not yet confirmed on Arweave.",
+        );
         setRetrieving(false);
         setRetrieveStep(null);
         return;
       }
 
       setRetrieveProgress(60);
-      await new Promise((resolve) => setTimeout(resolve, 400));
 
       const filesWithDecryption = [];
       for (const fileInfo of vaultIndex.files) {
-        const fileData = retrieveFromArweave(fileInfo.txId);
+        const fileData = await retrieveFromArweave(fileInfo.txId);
         if (fileData) {
           filesWithDecryption.push({
             ...fileInfo,
             encryptedData: new Uint8Array(fileData.data),
             masterKey: masterKeyHex,
-            uploadedAt: fileData.uploadedAt,
+            uploadedAt: fileData.uploadedAt || fileInfo.uploadedAt,
           });
         }
       }
@@ -58,10 +68,16 @@ export const useFileRetrieval = (showNotification) => {
 
       setRetrievedFiles(filesWithDecryption);
       setRetrieveStep("done");
-      showNotification("success", `Retrieved ${filesWithDecryption.length} file(s) from vault!`);
+      showNotification(
+        "success",
+        `Retrieved ${filesWithDecryption.length} file(s) from vault!`,
+      );
     } catch (error) {
       console.error("Retrieval failed:", error);
-      showNotification("error", "Failed to retrieve vault. Please check your vault key.");
+      showNotification(
+        "error",
+        "Failed to retrieve vault. Please check your vault key.",
+      );
       setRetrieveStep(null);
     } finally {
       setRetrieving(false);
