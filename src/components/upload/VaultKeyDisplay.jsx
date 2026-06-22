@@ -1,70 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Key, Copy, Eye, EyeOff, AlertCircle, Download, QrCode, CheckCircle } from "lucide-react";
-
-const generateQRDataURL = (text) => {
-  // Simple QR code using a canvas-based approach via Google Charts-compatible format
-  // We encode the data into a visual grid pattern representation
-  const size = 200;
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext("2d");
-
-  // Background
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, size, size);
-
-  // Draw a visual representation with the text hash as seed
-  let hash = 0;
-  for (let i = 0; i < text.length; i++) {
-    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
-  }
-
-  const grid = 21;
-  const cell = Math.floor(size / grid);
-  const offset = (size - grid * cell) / 2;
-
-  // Finder patterns (corners)
-  const drawFinder = (x, y) => {
-    ctx.fillStyle = "#000";
-    ctx.fillRect(offset + x * cell, offset + y * cell, 7 * cell, 7 * cell);
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(offset + (x + 1) * cell, offset + (y + 1) * cell, 5 * cell, 5 * cell);
-    ctx.fillStyle = "#000";
-    ctx.fillRect(offset + (x + 2) * cell, offset + (y + 2) * cell, 3 * cell, 3 * cell);
-  };
-
-  drawFinder(0, 0);
-  drawFinder(14, 0);
-  drawFinder(0, 14);
-
-  // Data modules (pseudo-random based on text hash)
-  ctx.fillStyle = "#000";
-  let seed = Math.abs(hash);
-  for (let row = 0; row < grid; row++) {
-    for (let col = 0; col < grid; col++) {
-      if ((row < 9 && col < 9) || (row < 9 && col >= 13) || (row >= 13 && col < 9)) continue;
-      seed = (seed * 1664525 + 1013904223) & 0xffffffff;
-      if (seed % 3 === 0) {
-        ctx.fillRect(offset + col * cell, offset + row * cell, cell - 1, cell - 1);
-      }
-    }
-  }
-
-  return canvas.toDataURL("image/png");
-};
+import { QRCodeCanvas } from "qrcode.react";
 
 export const VaultKeyDisplay = ({ vaultKey, onCopy }) => {
   const [showVaultKey, setShowVaultKey] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [qrDataUrl, setQrDataUrl] = useState(null);
-
-  useEffect(() => {
-    if (showQR && !qrDataUrl) {
-      setQrDataUrl(generateQRDataURL(vaultKey));
-    }
-  }, [showQR, qrDataUrl, vaultKey]);
+  const qrCanvasRef = useRef(null);
 
   const handleCopy = () => {
     onCopy();
@@ -98,9 +40,10 @@ export const VaultKeyDisplay = ({ vaultKey, onCopy }) => {
   };
 
   const downloadQR = () => {
-    const dataUrl = qrDataUrl || generateQRDataURL(vaultKey);
+    const canvas = qrCanvasRef.current?.querySelector("canvas");
+    if (!canvas) return;
     const a = document.createElement("a");
-    a.href = dataUrl;
+    a.href = canvas.toDataURL("image/png");
     a.download = "vault3-key-qr.png";
     document.body.appendChild(a);
     a.click();
@@ -129,13 +72,11 @@ export const VaultKeyDisplay = ({ vaultKey, onCopy }) => {
             {showVaultKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
-
         <div className="font-mono text-xs text-green-300 break-all leading-relaxed">
           {showVaultKey ? vaultKey : "•".repeat(Math.min(vaultKey.length, 100))}
         </div>
       </div>
 
-      {/* Export options */}
       <p className="text-sm text-gray-400 mb-3 font-medium">Export your Vault Key:</p>
       <div className="grid grid-cols-3 gap-3 mb-6">
         <button
@@ -171,26 +112,26 @@ export const VaultKeyDisplay = ({ vaultKey, onCopy }) => {
         </button>
       </div>
 
-      {/* QR Code Panel */}
       {showQR && (
         <div className="mb-6 bg-slate-900/50 rounded-xl p-6 border border-slate-700/50 text-center">
           <p className="text-gray-400 text-sm mb-4">Scan or download this QR to back up your Vault Key</p>
-          {qrDataUrl ? (
-            <div className="flex flex-col items-center gap-4">
-              <div className="bg-white p-3 rounded-xl inline-block">
-                <img src={qrDataUrl} alt="Vault Key QR Code" className="w-48 h-48" />
-              </div>
-              <button
-                onClick={downloadQR}
-                className="flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors"
-              >
-                <Download className="w-4 h-4" />
-                Download QR Image
-              </button>
+          <div className="flex flex-col items-center gap-4">
+            <div className="bg-white p-3 rounded-xl inline-block" ref={qrCanvasRef}>
+              <QRCodeCanvas
+                value={vaultKey}
+                size={192}
+                level="M"
+                includeMargin={false}
+              />
             </div>
-          ) : (
-            <div className="w-48 h-48 bg-slate-700 rounded-xl mx-auto animate-pulse" />
-          )}
+            <button
+              onClick={downloadQR}
+              className="flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors"
+            >
+              <Download className="w-4 h-4" />
+              Download QR Image
+            </button>
+          </div>
         </div>
       )}
 

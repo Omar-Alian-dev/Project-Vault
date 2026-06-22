@@ -48,9 +48,9 @@ export const AppPage = ({ notification, showNotification }) => {
     setShowPayment(true);
   };
 
-  const handlePaymentConfirm = (paymentMethod) => {
+   const handlePaymentConfirm = (paymentMethod, uploadToken) => {
     setShowPayment(false);
-    handleUpload(files, paymentMethod);
+    handleUpload(files, paymentMethod, uploadToken);
   };
 
   const copyVaultKey = () => {

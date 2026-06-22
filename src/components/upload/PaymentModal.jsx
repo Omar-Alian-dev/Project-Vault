@@ -13,7 +13,9 @@ import {
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-const PAYMENT_RECIPIENT = "0x0000000000000000000000000000000000000001";
+const PAYMENT_RECIPIENT =
+  process.env.REACT_APP_PAYMENT_RECIPIENT ||
+  "0xAa12924790268f4A498fC6bFE7A3377A3074a219";
 
 const calcEthPrice = (totalBytes) => {
   const mb = totalBytes / (1024 * 1024);
@@ -36,14 +38,14 @@ const StripeForm = ({ usdCost, onConfirm }) => {
     setStripeError("");
 
     try {
-      // Step 1: validate form (required for deferred-intent flow)
+      // Step 1: validate form
       const { error: submitError } = await elements.submit();
       if (submitError) {
         setStripeError(submitError.message);
         return;
       }
 
-      // Step 2: create PaymentIntent on the backend
+      // Step 2: create PaymentIntent on backend
       const res = await fetch("/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,8 +58,8 @@ const StripeForm = ({ usdCost, onConfirm }) => {
       }
       const { clientSecret } = await res.json();
 
-      // Step 3: confirm the payment
-      const { error } = await stripe.confirmPayment({
+      // Step 3: confirm payment with Stripe
+      const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         clientSecret,
         confirmParams: { return_url: window.location.href },
@@ -66,9 +68,24 @@ const StripeForm = ({ usdCost, onConfirm }) => {
 
       if (error) {
         setStripeError(error.message);
-      } else {
-        onConfirm("credit_card");
+        return;
       }
+
+      // Step 4: verify server-side and get upload token
+      const authRes = await fetch("/api/authorize-upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentIntentId: paymentIntent.id }),
+      });
+
+      if (!authRes.ok) {
+        const body = await authRes.json().catch(() => ({}));
+        setStripeError(body.error || "Payment verification failed.");
+        return;
+      }
+
+      const { uploadToken } = await authRes.json();
+      onConfirm("credit_card", uploadToken);
     } catch (err) {
       setStripeError(err.message || "Payment failed. Please try again.");
     } finally {

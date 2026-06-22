@@ -16,7 +16,7 @@ export const useFileUpload = (showNotification) => {
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const [totalFiles, setTotalFiles] = useState(0);
 
-  const handleUpload = async (files, paymentMethod) => {
+  const handleUpload = async (files, paymentMethod, uploadToken) => {
     if (files.length === 0) return;
 
     setUploading(true);
@@ -24,7 +24,6 @@ export const useFileUpload = (showNotification) => {
     setCurrentFileIndex(0);
 
     try {
-      // Initialise Irys uploader when MetaMask was used for payment
       let irys = null;
       if (paymentMethod === "metamask" && window.ethereum) {
         try {
@@ -46,25 +45,25 @@ export const useFileUpload = (showNotification) => {
         const file = files[idx];
         setCurrentFileIndex(idx + 1);
 
-        // Step 1: Encrypt
         setUploadStep("encrypt");
         setStepProgress(0);
         const encrypted = await encryptFile(file, masterKey, (p) =>
           setStepProgress(p),
         );
 
-        // Step 2: Payment already handled via modal — brief acknowledgement
         setUploadStep("pay");
         setStepProgress(0);
         await new Promise((resolve) => setTimeout(resolve, 600));
         setStepProgress(100);
         await new Promise((resolve) => setTimeout(resolve, 400));
 
-        // Step 3: Upload to Arweave via Irys (or mock fallback)
         setUploadStep("upload");
         setStepProgress(0);
-        const txId = await uploadToArweave(encrypted, irys, (p) =>
-          setStepProgress(p),
+        const txId = await uploadToArweave(
+          encrypted,
+          irys,
+          (p) => setStepProgress(p),
+          uploadToken,
         );
 
         uploadedFiles.push({
@@ -78,7 +77,6 @@ export const useFileUpload = (showNotification) => {
         });
       }
 
-      // Step 4: Finalise vault index on Arweave
       setUploadStep("finalize");
       setStepProgress(0);
       await new Promise((resolve) => setTimeout(resolve, 400));
@@ -91,7 +89,11 @@ export const useFileUpload = (showNotification) => {
         version: 2,
       };
 
-      const vaultIndexTxId = await saveVaultIndex(vaultIndex, irys);
+      const vaultIndexTxId = await saveVaultIndex(
+        vaultIndex,
+        irys,
+        uploadToken,
+      );
       const generatedVaultKey = `vault://${vaultIndexTxId}#${masterKeyHex}`;
       setStepProgress(100);
       await new Promise((resolve) => setTimeout(resolve, 300));
