@@ -13,7 +13,7 @@
 ![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Arweave](https://img.shields.io/badge/Storage-Arweave-000000?style=for-the-badge&logo=arweave&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Alpha-orange?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Beta-orange?style=for-the-badge)
 
 ---
 
